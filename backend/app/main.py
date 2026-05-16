@@ -7,9 +7,10 @@ app = FastAPI(title="Medical Report Explainer API")
 import os
 
 ALLOWED_ORIGINS = [
-    "http://localhost:5173",                          # local dev
-    "http://localhost:3000",                          # alternative local
-    os.getenv("FRONTEND_URL", ""),                    # set this on Render later
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://medical-report-explainer-rust.vercel.app",  # your actual Vercel URL
+    os.getenv("FRONTEND_URL", ""),
 ]
 
 app.add_middleware(
