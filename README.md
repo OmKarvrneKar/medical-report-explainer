@@ -1,4 +1,4 @@
-# Medical Report Explainer 🏥📄
+# Medical Report Explainer
 
 A full-stack AI-powered application designed to demystify complex medical laboratory reports. Users can upload their medical reports (PDF or images), and the system extracts the text, analyzes the medical parameters using Google's Gemini AI, and provides a plain-language summary of the results. 
 
@@ -6,7 +6,7 @@ The application is fully multilingual, supporting English and several Indian lan
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - **Document Parsing:** Upload medical reports in PDF, JPG, or PNG formats. High-accuracy OCR (Tesseract) extracts text from scanned images, while PyMuPDF handles digital PDFs.
 - **AI Analysis:** Integrates with **Google Gemini AI** to identify medical parameters, map them against normal ranges, assign risk levels, and provide actionable health advice.
@@ -18,7 +18,7 @@ The application is fully multilingual, supporting English and several Indian lan
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 * **Framework:** React + Vite
@@ -36,7 +36,7 @@ The application is fully multilingual, supporting English and several Indian lan
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## Getting Started (Local Development)
 
 ### Prerequisites
 * **Node.js** (v18+)
@@ -94,7 +94,7 @@ The application is fully multilingual, supporting English and several Indian lan
 
 ---
 
-## 🌐 Deployment Configuration
+## Deployment Configuration
 
 This repository is pre-configured for cloud deployment:
 * **Backend (Render):** Uses the provided `backend/Dockerfile` and `render.yaml` to automatically install Linux Tesseract dependencies (including Hindi/Kannada language packs) before launching FastAPI.
