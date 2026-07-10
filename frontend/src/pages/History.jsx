@@ -195,6 +195,7 @@ export default function History() {
   const [selected,   setSelected]       = useState(null);   // full report shown in modal
   const [loadingId,  setLoadingId]      = useState(null);   // which row is loading
   const [deletingId, setDeletingId]     = useState(null);   // which row is deleting
+  const [compareList, setCompareList]   = useState([]);     // array of up to 2 report IDs
   const LIMIT = 10;
 
   // fetch list on mount + page change
@@ -248,24 +249,72 @@ export default function History() {
     }
   };
 
+  const toggleCompare = (id) => {
+    setCompareList(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(item => item !== id);
+      }
+      if (prev.length >= 2) {
+        alert("You can only compare 2 reports at a time.");
+        return prev;
+      }
+      return [...prev, id];
+    });
+  };
+
+  const handleCompareSubmit = () => {
+    if (compareList.length !== 2) return;
+    // ensure older report is report_a
+    const r1 = reports.find(r => r.id === compareList[0]);
+    const r2 = reports.find(r => r.id === compareList[1]);
+    if (!r1 || !r2) return;
+    
+    let a = compareList[0];
+    let b = compareList[1];
+    
+    // Sort by created_at ascending (A is older, B is newer)
+    if (new Date(r1.created_at) > new Date(r2.created_at)) {
+      a = compareList[1];
+      b = compareList[0];
+    }
+    
+    navigate(`/compare?report_a=${a}&report_b=${b}`);
+  };
+
   // ── render ──────────────────────────────────────────────────────────────────
   return (
     <div className="glass-panel animate-fade-in-up delay-100" style={{ padding: "2.5rem" }}>
 
       {/* Page header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
-        <button
-          onClick={() => navigate("/")}
-          className="btn-secondary hover-lift"
-        >
-          ← Back
-        </button>
-        <div>
-          <h1 className="text-gradient" style={{ margin: 0, fontSize: 28, fontWeight: 700 }}>Report History</h1>
-          <p style={{ margin: "4px 0 0", fontSize: 15, color: "var(--text-muted)" }}>
-            All your previously analysed lab reports
-          </p>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32, flexWrap: "wrap", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <button
+            onClick={() => navigate("/")}
+            className="btn-secondary hover-lift"
+          >
+            ← Back
+          </button>
+          <div>
+            <h1 className="text-gradient" style={{ margin: 0, fontSize: 28, fontWeight: 700 }}>Report History</h1>
+            <p style={{ margin: "4px 0 0", fontSize: 15, color: "var(--text-muted)" }}>
+              All your previously analysed lab reports
+            </p>
+          </div>
         </div>
+        
+        {compareList.length > 0 && (
+          <div className="flex items-center gap-4 bg-blue-50 px-4 py-2 rounded-lg border border-blue-200">
+            <span className="text-sm text-blue-800 font-medium">{compareList.length}/2 selected</span>
+            <button 
+              className={`btn-primary px-4 py-1.5 text-sm ${compareList.length !== 2 ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={compareList.length !== 2}
+              onClick={handleCompareSubmit}
+            >
+              Compare
+            </button>
+            <button onClick={() => setCompareList([])} className="text-sm text-slate-500 hover:text-slate-800">Clear</button>
+          </div>
+        )}
       </div>
 
       {/* Loading state */}
@@ -322,14 +371,24 @@ export default function History() {
       {/* Report list */}
       {!loading && reports.map((report) => {
         const st = STATUS_STYLES[report.overall_status] || STATUS_STYLES.normal;
+        const isSelected = compareList.includes(report.id);
+        
         return (
-          <div key={report.id} className="glass-card hover-lift" style={{
+          <div key={report.id} className={`glass-card hover-lift transition-all ${isSelected ? 'ring-2 ring-blue-400 bg-blue-50/30' : ''}`} style={{
             padding: "16px 20px",
             marginBottom: 16,
             display: "flex",
             alignItems: "center",
             gap: 16,
           }}>
+            <div className="flex items-center justify-center">
+              <input 
+                type="checkbox" 
+                className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"
+                checked={isSelected}
+                onChange={() => toggleCompare(report.id)}
+              />
+            </div>
             {/* Status dot */}
             <div style={{
               width: 12, height: 12, borderRadius: "50%",

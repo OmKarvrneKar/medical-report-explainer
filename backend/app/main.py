@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from app.routers import reports, auth, users
+from app.routers import reports, auth, users, trends
 from app.limiter import limiter
 
 app = FastAPI(title="Medical Report Explainer API")
@@ -30,6 +30,7 @@ app.add_middleware(
 app.include_router(reports.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
+app.include_router(trends.router, prefix="/api/trends")
 
 @app.get("/")
 def health_check():

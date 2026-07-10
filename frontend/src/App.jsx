@@ -5,6 +5,8 @@ import History from './pages/History';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Account from './pages/Account';
+import Trends from './pages/Trends';
+import Compare from './pages/Compare';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 
@@ -27,6 +29,7 @@ const NavBar = () => {
       <div className="flex gap-4">
         <Link to="/" className="text-slate-600 hover:text-blue-600 font-medium">Home</Link>
         <Link to="/history" className="text-slate-600 hover:text-blue-600 font-medium">History</Link>
+        <Link to="/trends" className="text-slate-600 hover:text-blue-600 font-medium">Trends</Link>
         <Link to="/account" className="text-slate-600 hover:text-blue-600 font-medium">Account</Link>
         <button onClick={logout} className="text-slate-600 hover:text-red-600 font-medium">Logout</button>
       </div>
@@ -45,6 +48,8 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+            <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
+            <Route path="/compare" element={<ProtectedRoute><Compare /></ProtectedRoute>} />
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
           </Routes>
         </div>
