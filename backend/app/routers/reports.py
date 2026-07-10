@@ -70,11 +70,15 @@ def read_report(report_id: str, db: Session = Depends(get_db), current_user: Use
     if db_report is None:
         raise HTTPException(status_code=404, detail="Report not found")
     
+    summary_data = json.loads(db_report.summary) if db_report.summary else {}
+    
     return {
         "id": db_report.id,
-        "summary": db_report.summary,
+        "patient_summary": summary_data.get("patient_summary", ""),
+        "clinical_summary": summary_data.get("clinical_summary", ""),
+        "confidence_score": summary_data.get("confidence_score", 100.0),
         "overall_status": db_report.overall_status,
-        "parameters": json.loads(db_report.parameters),
+        "panels": json.loads(db_report.parameters) if db_report.parameters else [],
         "what_to_do": db_report.what_to_do,
         "disclaimer": db_report.disclaimer,
         "language": db_report.language,
@@ -86,9 +90,10 @@ def read_history(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
     reports = get_reports(db, current_user.id, skip=skip, limit=limit)
     result = []
     for r in reports:
+        summary_data = json.loads(r.summary) if r.summary else {}
         result.append({
             "id": r.id,
-            "summary": r.summary,
+            "summary": summary_data.get("patient_summary", ""),
             "overall_status": r.overall_status,
             "created_at": r.created_at,
             "language": r.language
@@ -110,11 +115,15 @@ async def export_report_pdf(report_id: str, db: Session = Depends(get_db), curre
     if not report:
         raise HTTPException(status_code=404, detail="Report not found.")
 
+    summary_data = json.loads(report.summary) if report.summary else {}
+    
     # Convert SQLAlchemy model → plain dict
     report_dict = {
-        "summary":        report.summary,
+        "patient_summary": summary_data.get("patient_summary", ""),
+        "clinical_summary": summary_data.get("clinical_summary", ""),
+        "confidence_score": summary_data.get("confidence_score", 100.0),
         "overall_status": report.overall_status,
-        "parameters":     report.parameters,   # stored as JSON string — pdf_service handles it
+        "panels":         report.parameters,   # stored as JSON string
         "what_to_do":     getattr(report, "what_to_do",  "Please consult your doctor."),
         "disclaimer":     getattr(report, "disclaimer",  "This is for informational purposes only."),
         "language":       report.language,

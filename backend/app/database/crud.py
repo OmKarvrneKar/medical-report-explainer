@@ -4,12 +4,18 @@ import json
 import uuid
 
 def save_report(db: Session, report_data: dict, language: str, user_id: str):
+    summary_data = {
+        "patient_summary": report_data.get("patient_summary", ""),
+        "clinical_summary": report_data.get("clinical_summary", ""),
+        "confidence_score": report_data.get("confidence_score", 100.0)
+    }
+    
     db_report = ReportDB(
         id=str(uuid.uuid4()),
         user_id=user_id,
-        summary=report_data.get("summary", ""),
+        summary=json.dumps(summary_data),
         overall_status=report_data.get("overall_status", "normal"),
-        parameters=json.dumps(report_data.get("parameters", [])),
+        parameters=json.dumps(report_data.get("panels", [])),
         what_to_do=report_data.get("what_to_do", ""),
         disclaimer=report_data.get("disclaimer", ""),
         language=language

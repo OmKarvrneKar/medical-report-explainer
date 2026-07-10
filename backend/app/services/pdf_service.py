@@ -156,10 +156,17 @@ def generate_report_pdf(report: dict) -> bytes:
 
     # ── 4. TEST RESULTS TABLE ─────────────────────────────────────────────────
     if parameters:
-        story.append(Paragraph("Your Test Results", st["section_heading"]))
-        story.append(HRFlowable(width=W, thickness=0.5, color=LIGHT_BLUE, spaceAfter=8))
+        for panel in parameters:
+            panel_name = panel.get("name", "General Panel")
+            story.append(Paragraph(panel_name, st["section_heading"]))
+            if panel.get("summary"):
+                story.append(Paragraph(panel.get("summary"), st["body"]))
+                story.append(Spacer(1, 0.2 * cm))
+                
+            story.append(HRFlowable(width=W, thickness=0.5, color=LIGHT_BLUE, spaceAfter=8))
 
-        for p in parameters:
+            panel_params = panel.get("parameters", [])
+            for p in panel_params:
             risk        = p.get("risk_level", "normal")
             bg, fg      = RISK_COLORS.get(risk, RISK_COLORS["normal"])
             flag        = p.get("flag")
@@ -202,7 +209,9 @@ def generate_report_pdf(report: dict) -> bytes:
                     "flag", fontSize=9, fontName="Helvetica-Bold",
                     textColor=AMBER, leading=12,
                 ))])
-            inner.append([Paragraph(p.get("explanation", ""), st["param_body"])])
+                
+            explanation = p.get("patient_explanation", p.get("explanation", ""))
+            inner.append([Paragraph(explanation, st["param_body"])])
 
             card = Table(inner, colWidths=[W - 1.2 * cm])
             card.setStyle(TableStyle([
