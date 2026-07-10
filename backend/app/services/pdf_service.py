@@ -167,72 +167,72 @@ def generate_report_pdf(report: dict) -> bytes:
 
             panel_params = panel.get("parameters", [])
             for p in panel_params:
-            risk        = p.get("risk_level", "normal")
-            bg, fg      = RISK_COLORS.get(risk, RISK_COLORS["normal"])
-            flag        = p.get("flag")
+                risk        = p.get("risk_level", "normal")
+                bg, fg      = RISK_COLORS.get(risk, RISK_COLORS["normal"])
+                flag        = p.get("flag")
 
-            # Row 1 — test name + risk badge
-            badge_text  = risk.upper()
-            badge_para  = Paragraph(badge_text, ParagraphStyle(
-                "badge", fontSize=8, fontName="Helvetica-Bold",
-                textColor=fg, leading=10, alignment=TA_CENTER,
-            ))
-            name_para   = Paragraph(p.get("name", "—"), st["param_name"])
+                # Row 1 — test name + risk badge
+                badge_text  = risk.upper()
+                badge_para  = Paragraph(badge_text, ParagraphStyle(
+                    "badge", fontSize=8, fontName="Helvetica-Bold",
+                    textColor=fg, leading=10, alignment=TA_CENTER,
+                ))
+                name_para   = Paragraph(p.get("name", "—"), st["param_name"])
 
-            row1        = Table(
-                [[name_para, badge_para]],
-                colWidths=[W * 0.78, W * 0.22]
-            )
-            row1.setStyle(TableStyle([
-                ("BACKGROUND",   (1, 0), (1, 0), bg),
-                ("VALIGN",       (0, 0), (-1,-1), "MIDDLE"),
-                ("TOPPADDING",   (0, 0), (-1,-1), 4),
-                ("BOTTOMPADDING",(0, 0), (-1,-1), 4),
-                ("LEFTPADDING",  (0, 0), (0, 0), 0),
-                ("RIGHTPADDING", (1, 0), (1, 0), 0),
-                ("ROUNDEDCORNERS", [4]),
-            ]))
+                row1        = Table(
+                    [[name_para, badge_para]],
+                    colWidths=[W * 0.78, W * 0.22]
+                )
+                row1.setStyle(TableStyle([
+                    ("BACKGROUND",   (1, 0), (1, 0), bg),
+                    ("VALIGN",       (0, 0), (-1,-1), "MIDDLE"),
+                    ("TOPPADDING",   (0, 0), (-1,-1), 4),
+                    ("BOTTOMPADDING",(0, 0), (-1,-1), 4),
+                    ("LEFTPADDING",  (0, 0), (0, 0), 0),
+                    ("RIGHTPADDING", (1, 0), (1, 0), 0),
+                    ("ROUNDEDCORNERS", [4]),
+                ]))
 
-            # Row 2 — value + normal range
-            value_str  = (
-                f"Your value: <b>{p.get('value','—')}</b>"
-                f"     Normal range: {p.get('normal_range','—')}"
-            )
-            # Row 3 — flag (only if abnormal)
-            # Row 4 — explanation
-            inner = [
-                [row1],
-                [Paragraph(value_str, st["param_body"])],
-            ]
-            if flag:
-                inner.append([Paragraph(f"⚠  {flag}", ParagraphStyle(
-                    "flag", fontSize=9, fontName="Helvetica-Bold",
-                    textColor=AMBER, leading=12,
-                ))])
+                # Row 2 — value + normal range
+                value_str  = (
+                    f"Your value: <b>{p.get('value','—')}</b>"
+                    f"     Normal range: {p.get('normal_range','—')}"
+                )
+                # Row 3 — flag (only if abnormal)
+                # Row 4 — explanation
+                inner = [
+                    [row1],
+                    [Paragraph(value_str, st["param_body"])],
+                ]
+                if flag:
+                    inner.append([Paragraph(f"⚠  {flag}", ParagraphStyle(
+                        "flag", fontSize=9, fontName="Helvetica-Bold",
+                        textColor=AMBER, leading=12,
+                    ))])
                 
-            explanation = p.get("patient_explanation", p.get("explanation", ""))
-            inner.append([Paragraph(explanation, st["param_body"])])
+                explanation = p.get("patient_explanation", p.get("explanation", ""))
+                inner.append([Paragraph(explanation, st["param_body"])])
 
-            card = Table(inner, colWidths=[W - 1.2 * cm])
-            card.setStyle(TableStyle([
-                ("BACKGROUND",    (0, 0), (-1, -1), WHITE),
-                ("BOX",           (0, 0), (-1, -1), 0.5, colors.HexColor("#EEEEEE")),
-                ("TOPPADDING",    (0, 0), (-1, -1), 6),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
-                ("LEFTPADDING",   (0, 0), (-1, -1), 10),
-                ("RIGHTPADDING",  (0, 0), (-1, -1), 10),
-                ("ROUNDEDCORNERS", [6]),
-            ]))
+                card = Table(inner, colWidths=[W - 1.2 * cm])
+                card.setStyle(TableStyle([
+                    ("BACKGROUND",    (0, 0), (-1, -1), WHITE),
+                    ("BOX",           (0, 0), (-1, -1), 0.5, colors.HexColor("#EEEEEE")),
+                    ("TOPPADDING",    (0, 0), (-1, -1), 6),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+                    ("LEFTPADDING",   (0, 0), (-1, -1), 10),
+                    ("RIGHTPADDING",  (0, 0), (-1, -1), 10),
+                    ("ROUNDEDCORNERS", [6]),
+                ]))
 
-            # Wrap card in a coloured left-border accent
-            accent = Table([[card]], colWidths=[W])
-            accent.setStyle(TableStyle([
-                ("LEFTPADDING",  (0, 0), (-1, -1), 0),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-                ("TOPPADDING",   (0, 0), (-1, -1), 0),
-                ("BOTTOMPADDING",(0, 0), (-1, -1), 8),
-            ]))
-            story.append(accent)
+                # Wrap card in a coloured left-border accent
+                accent = Table([[card]], colWidths=[W])
+                accent.setStyle(TableStyle([
+                    ("LEFTPADDING",  (0, 0), (-1, -1), 0),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                    ("TOPPADDING",   (0, 0), (-1, -1), 0),
+                    ("BOTTOMPADDING",(0, 0), (-1, -1), 8),
+                ]))
+                story.append(accent)
 
         story.append(Spacer(1, 0.3 * cm))
 
