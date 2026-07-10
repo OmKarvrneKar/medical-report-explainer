@@ -1,7 +1,8 @@
-from sqlalchemy import create_engine, Column, String, Text, DateTime
+from sqlalchemy import create_engine, Column, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime
 import uuid
+from app.database.encryption import EncryptedText
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./reports.db"
 
@@ -12,15 +13,23 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+class UserDB(Base):
+    __tablename__ = "users"
+    id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 class ReportDB(Base):
     __tablename__ = "reports"
 
     id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
-    summary = Column(Text)
+    user_id = Column(String, ForeignKey("users.id"))
+    summary = Column(EncryptedText)
     overall_status = Column(String)
-    parameters = Column(Text) # JSON string
-    what_to_do = Column(Text)
-    disclaimer = Column(Text)
+    parameters = Column(EncryptedText) # JSON string
+    what_to_do = Column(EncryptedText)
+    disclaimer = Column(EncryptedText)
     language = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
 

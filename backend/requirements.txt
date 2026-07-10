@@ -9,3 +9,8 @@ python-dotenv
 sqlalchemy
 reportlab
 deep-translator
+passlib[bcrypt]
+python-jose[cryptography]
+cryptography
+slowapi
+filetype

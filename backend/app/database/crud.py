@@ -3,9 +3,10 @@ from app.database.db import ReportDB
 import json
 import uuid
 
-def save_report(db: Session, report_data: dict, language: str):
+def save_report(db: Session, report_data: dict, language: str, user_id: str):
     db_report = ReportDB(
         id=str(uuid.uuid4()),
+        user_id=user_id,
         summary=report_data.get("summary", ""),
         overall_status=report_data.get("overall_status", "normal"),
         parameters=json.dumps(report_data.get("parameters", [])),
@@ -18,14 +19,14 @@ def save_report(db: Session, report_data: dict, language: str):
     db.refresh(db_report)
     return db_report
 
-def get_report(db: Session, report_id: str):
-    return db.query(ReportDB).filter(ReportDB.id == report_id).first()
+def get_report(db: Session, report_id: str, user_id: str):
+    return db.query(ReportDB).filter(ReportDB.id == report_id, ReportDB.user_id == user_id).first()
 
-def get_reports(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(ReportDB).order_by(ReportDB.created_at.desc()).offset(skip).limit(limit).all()
+def get_reports(db: Session, user_id: str, skip: int = 0, limit: int = 100):
+    return db.query(ReportDB).filter(ReportDB.user_id == user_id).order_by(ReportDB.created_at.desc()).offset(skip).limit(limit).all()
 
-def delete_report(db: Session, report_id: str):
-    report = db.query(ReportDB).filter(ReportDB.id == report_id).first()
+def delete_report(db: Session, report_id: str, user_id: str):
+    report = db.query(ReportDB).filter(ReportDB.id == report_id, ReportDB.user_id == user_id).first()
     if report:
         db.delete(report)
         db.commit()
