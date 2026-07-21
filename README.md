@@ -103,5 +103,3 @@ This repository is pre-configured for cloud deployment:
 ---
 *Built to make healthcare data accessible for everyone.*
 
-
-
