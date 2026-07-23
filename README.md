@@ -101,5 +101,5 @@ This repository is pre-configured for cloud deployment:
 * **Frontend (Vercel):** Uses `vercel.json` to handle React Router client-side routing rewrites. Points to the live backend using `.env.production`.
 
 ---
-*Built to make healthcare data accessible for everyone.*
+*..Built to make healthcare data accessible for everyone..* 
 
