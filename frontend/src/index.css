@@ -9,7 +9,7 @@
   --surface-solid: #FFFFFF;
   --surface-border: rgba(255, 255, 255, 0.6);
   
-  --text-main: #000000; /* Pitch Black Font for maximum visibility */
+  --text-main: #000000; /* Pitch Black Font for maximum visibility  */
   --text-muted: #333333; /* Darker Gray */
   
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
@@ -34,7 +34,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-gradient: linear-gradient(135deg, #18181B 0%, #09090B 100%); /* True Dark */
+    --bg-gradient: linear-gradient(135deg, #18181B 0%, #09090B 100%); /*  True Dark */
     --surface: rgba(39, 39, 42, 0.5);
     --surface-solid: #18181B;
     --surface-border: rgba(255, 255, 255, 0.05);
