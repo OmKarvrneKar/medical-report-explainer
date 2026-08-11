@@ -11,6 +11,7 @@ The application is fully multilingual, supporting English and several Indian lan
 
 - **Document Parsing:** Upload medical reports in PDF, JPG, or PNG formats. High-accuracy OCR (Tesseract) extracts text from scanned images, while PyMuPDF handles digital PDFs.
 - **AI Analysis:** Integrates with **Google Gemini AI** to identify medical parameters, map them against normal ranges, assign risk levels, and provide actionable health advice.
+- **Report Comparison:** Compare different medical reports side-by-side to track changes and health progress over time.
 - **Multilingual Support:** Translates complex medical results into plain language in English, Hindi, Marathi, Kannada, Tamil, and Telugu.
 - **Accessibility:** Built-in **Voice Readout** (Text-to-Speech) reads the analysis aloud in the user's selected language.
 - **Report History:** Automatically saves reports to a local SQLite database, allowing users to revisit past reports and track their health over time.
