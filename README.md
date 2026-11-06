@@ -92,7 +92,7 @@ The application is fully multilingual, supporting English and several Indian lan
    ```bash
    npm run dev
    ```
-5. Open `http://localhost:5173` in your browser.
+5. Open `http://localhost:5173` in your browser
 
 ---
 
